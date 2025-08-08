@@ -2,7 +2,7 @@
 
 import contact.fields
 import django.utils.timezone
-import utlis.snowflake
+import utils.snowflake
 from django.db import migrations, models
 
 
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Contact',
             fields=[
-                ('code', contact.fields.SnowflakeIDField(default=utlis.snowflake.generate_snowflake_id, editable=False, primary_key=True, serialize=False, unique=True)),
+                ('code', contact.fields.SnowflakeIDField(default=utils.snowflake.generate_snowflake_id, editable=False, primary_key=True, serialize=False, unique=True)),
                 ('first_name', models.CharField(max_length=30)),
                 ('last_name', models.CharField(max_length=30)),
                 ('email', models.EmailField(max_length=254)),
