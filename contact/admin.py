@@ -11,10 +11,10 @@ class ContactAdmin(admin.ModelAdmin):
     list_per_page = 20
     fieldsets = (
         (None, {
-            'fields': ('first_name', 'last_name', 'email', 'phone_number')
+            'fields': ('first_name', 'last_name', 'email', 'phone_number', 'description')
         }),
         ('Advanced options', {
             'classes': ('collapse',),
-            'fields': ('code', 'created_at'),
+            'fields': ('code', 'created_at','show', 'picture'),
         }),
     )
