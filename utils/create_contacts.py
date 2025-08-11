@@ -6,6 +6,9 @@ from random import choice
 
 import django
 from django.conf import settings
+from snowflake import snowflake
+
+from snowflake import generate_snowflake_id
 
 DJANGO_BASE_DIR = Path(__file__).parent.parent
 NUMBER_OF_OBJECTS = 1000
@@ -36,20 +39,22 @@ if __name__ == '__main__':
 
     for _ in range(NUMBER_OF_OBJECTS):
         profile = fake.profile()
+        code = generate_snowflake_id()
         email = profile['mail']
         first_name, last_name = profile['name'].split(' ', 1)
-        phone = fake.phone_number()
+        phone_number = fake.phone_number()
         created_at: datetime = fake.date_this_year()
         description = fake.text(max_nb_chars=100)
         category = choice(django_categories)
 
         django_contacts.append(
             Contact(
+                code=code,
                 first_name=first_name,
                 last_name=last_name,
-                phone=phone,
+                phone_number=phone_number,
                 email=email,
-                created_date=created_date,
+                created_at=created_at,
                 description=description,
                 category=category,
             )

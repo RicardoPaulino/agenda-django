@@ -1,9 +1,113 @@
 {% extends "global/base.html" %}
-{% block title %}Contact Us{% endblock %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <div class="container">
+        <!-- Top Actions -->
+        <div class="flex items-center justify-end mb-6 gap-2">
+            <a href="{% url 'contact:create' %}" class="mr-5 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                Adicionar Novo Contato
+            </a>
+            <form method="get" class="flex items-center gap-2" action="{% url 'contact:search' %}">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ request.GET.q }}" 
+                    placeholder="Buscar por nome, telefone ou email..." 
+                    class="w-64 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    autofocus="autofocus"
+                    autocomplete="off"
+                >
+                <button 
+                    type="submit" 
+                    class="w-12 h-10 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center justify-center"
+                    title="Selecionar Contato"
+                >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-white uppercase bg-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Nome
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Telefone
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Email
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Categoria
+                        </th>
+                        {% comment %}
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
+                        {% endcomment %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if error_message %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-center text-red-600">
+                                <i class="fa-solid fa-circle-exclamation mr-2"></i>
+                                {{ error_message }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        {% for contact in contacts %}
+                            <tr class="bg-white border-b border-gray-200 text-black hover:bg-blue-50 transition">
+                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                    <a href="{% url 'contact:info' contact.code %}" class="text-blue-600 hover:underline">
+                                        {{ contact.first_name }} {{ contact.last_name }}
+                                    </a>
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ contact.phone_number }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ contact.email }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ contact.category }}
+                                </td>
+                                {% comment %}
+                                <td class="px-6 py-4">
+                                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                </td>
+                                {% endcomment %}
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
 
-{% block content %} 
-<div class="container">
-    <h1>Contact Us</h1>
-    <p>Welcome to the contact page. If you have any questions, feel free to reach out!</p>
-</div>
+        {% if contacts.has_other_pages %}
+            <div class="flex justify-center mt-4 mb-4">
+                <nav class="inline-flex">
+                    {% if contacts.has_previous %}
+                        <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="px-3 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400">First</a>
+                        <a href="?page={{ contacts.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="px-3 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400">&laquo; Prev</a>
+                    {% endif %}
+                    {% for num in contacts.paginator.page_range %}
+                        {% if contacts.number == num %}
+                            <span class="px-3 py-2 mx-1 bg-blue-600 text-white rounded">{{ num }}</span>
+                        {% elif num > contacts.number|add:'-3' and num < contacts.number|add:'3' %}
+                            <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="px-3 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if contacts.has_next %}
+                        <a href="?page={{ contacts.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="px-3 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400">Next &raquo;</a>
+                        <a href="?page={{ contacts.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="px-3 py-2 mx-1 bg-gray-300 rounded hover:bg-gray-400">Last</a>
+                    {% endif %}
+                </nav>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

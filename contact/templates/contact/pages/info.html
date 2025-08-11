@@ -1,0 +1,45 @@
+{% extends "global/base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <div class="max-w-md mx-auto">
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+            <div class="flex items-center mb-6">
+                <div class="flex-shrink-0 h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-2xl font-bold text-blue-600 mr-4">
+                    {{ contact.first_name|slice:":1" }}{{ contact.last_name|slice:":1" }}
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold">{{ contact.first_name }} {{ contact.last_name }}</h2>
+                    <span class="text-sm text-gray-500">{{ contact.category.name }}</span>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div>
+                    <span class="font-medium">Telefone:</span>
+                    <span>{{ contact.phone_number }}</span>
+                </div>
+                <div>
+                    <span class="font-medium">Email:</span>
+                    <span>{{ contact.email }}</span>
+                </div>
+                <div>
+                    <span class="font-medium">Descrição:</span>
+                    <span>{{ contact.description }}</span>
+                </div>
+                <div>
+                    <span class="font-medium">Criado em:</span>
+                    <span>{{ contact.created_at|date:"d/m/Y H:i" }}</span>
+                </div>
+            </div>
+            <div class="flex justify-end mt-6">
+                <a href="{% url 'contact:index' %}" class="mr-3 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700" title="Editar Contato">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <a href="{% url 'contact:index' %}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" title="Voltar">
+                    <i class="fa-solid fa-arrow-left"></i>   
+                </a>             
+            </div>
+        </div>
+    </div>
+{% endblock %}
